@@ -3,10 +3,9 @@
 {% endblock %}
 {% block body %}
 <h2>Vul dit even in.</h2>
-    <form action="from.php" method="get">
-        Name: <input type="text" name="name"><br>
-        E-mail: <input type="text" name="email"><br>
-        Bericht: <textarea name="message" rows="10" cols="40"></textarea><br>
-        <input type="submit" name="verstuur">
-    </form>
+{{ form(formulier) }}
+    <h2>Eerdere berichten</h2>
+    {{ post.name }}
+    {{ post.email }}
+    {{ post.message }}
 {% endblock %}

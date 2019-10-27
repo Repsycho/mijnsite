@@ -3,43 +3,41 @@
 
 namespace App\Controller;
 
-use App\Repository\FormulierRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Formulier;
+use App\Form;
 
 class controller extends AbstractController
 {
     /**
-     * @Route("/form/{name}", name="form")
+     * @Route("/post", name="post")
      */
-    public function formulier(Request $request)
+    public function index(Request $request)
     {
-        //request
-        $name = $request->get('name');
+        $post = new Formulier();
 
-        return $this->render('form.html.twig', ['name' => $name]);
+        $this_form = $this->createForm(Form\FormType::class, $post);
 
-        //opslag
-        $formulier =new Formulier();
+        $this_form->handleRequest($request);
 
-        $formulier->setName('Ewout');
-        $formulier->setEmail('vleermuis@live');
-        $formulier->getMessage(text'Hallo ik heet ewout');
-        $formulier->getTimeofpost();
+        if ($this_form->isSubmitted() && $this_form->isValid());
+        {
+            $em = $this->getDoctrine()->getManager();
 
-        $em = $this->getDoctrine()->getManager();
+            $em->persist($post);
+            $em->flush();
+        }
 
-        $retrieveform = $em->getRepository(FormulierRepository::class)->findAll();
+        $retrievedform = $em->getRepository(Formulier::class)->findBy(array('id' => 1));
 
-        var_dump($retrieveform);
+        var_dump($retrievedform);
 
-        $em->persist($formulier);
+        $post->getName();
+        $post->getEmail();
+        $post->getMessage();
 
-        $em->flush();
-
-        return $this->render('form.html.twig', ['name' => $name]);
+        return $this->render('form.html.twig', [ 'formulier' => $this_form->createView(), 'post' => $retrievedform]);
     }
 }
