@@ -30,7 +30,7 @@ class controller extends AbstractController
             $em->flush();
         }
 
-        $retrievedform = $em->getRepository(Formulier::class)->findBy(array('id' => 1));
+        $retrievedform = $em->getRepository(Formulier::class)->findAll();
 
         var_dump($retrievedform);
 
